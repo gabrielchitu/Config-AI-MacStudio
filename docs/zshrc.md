@@ -47,6 +47,7 @@ _cc_llm() {
 | `cc-mistral` | `mistral-small` | `mistral-small3.2:24b` |
 | `cc-deepseek` | `deepseek-local` | `deepseek-r1:32b` |
 | `cc-glm-local` | `glm-local` | `glm-4.7-flash:latest` |
+| `cc-qwen` | `qwen-coder` | `qwen2.5-coder:14b` |
 
 #### Modele cloud (via LiteLLM)
 
@@ -122,12 +123,27 @@ La schimbarea proiectului activ, funcția raportează "sesiune negăsită".
 
 ---
 
+## LiteLLM — Daemon (autostart)
+
+LiteLLM pornește automat la boot — **nu se pornește manual**.
+
+```zsh
+# Restart după modificare ~/config.yaml
+sudo launchctl unload /Library/LaunchDaemons/com.gabrielchitu.litellm.plist
+sudo launchctl load  /Library/LaunchDaemons/com.gabrielchitu.litellm.plist
+
+# Verificare
+curl http://localhost:4000/v1/models -H "Authorization: Bearer sk-local-7279bbc34c1ec9e2b37e1e15e941f820"
+```
+
+> Auth key pentru CLI + scripturi: `sk-local-7279bbc34c1ec9e2b37e1e15e941f820` (virtual key, DB mode).  
+> `gabriel2026` funcționează doar la instanțe manuale fără daemon.
+
+---
+
 ## Comenzi rapide referință
 
 ```zsh
-# Start LiteLLM router
-source ~/venv-litellm/bin/activate && litellm --config ~/config.yaml
-
 # Token savings analytics
 rtk gain
 rtk gain --history
@@ -135,7 +151,9 @@ rtk gain --history
 # Session compression status
 caveman   # sau direct: _session_progress
 
-# Test model local
-cc-mistral    # mistral-small3.2:24b via Ollama
-cc-deepseek   # deepseek-r1:32b via Ollama
+# Modele locale
+cc-mistral    # mistral-small3.2:24b
+cc-deepseek   # deepseek-r1:32b
+cc-qwen       # qwen2.5-coder:14b
+cc-glm-local  # glm-4.7-flash
 ```
