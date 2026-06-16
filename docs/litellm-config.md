@@ -133,11 +133,15 @@ curl http://localhost:4000/v1/messages \
 
 ## Troubleshooting
 
-**LiteLLM nu răspunde:**
+**LiteLLM nu răspunde / port conflict:**
 ```bash
 lsof -i :4000          # verifică dacă portul e ocupat
 cat ~/litellm.error.log | tail -50
 ```
+> Dacă portul 4000 e ocupat, LiteLLM pornește pe un port random. Verifică output-ul la pornire și actualizează `ANTHROPIC_BASE_URL` în `demo/.env` cu portul corect.
+
+**GLM (glm-4.7-flash) returnează content gol via LiteLLM:**
+> Template non-chat `{{ .Prompt }}` — LiteLLM streaming parse eșuează silențios. Bypass: POST direct la Ollama `/api/generate` în loc de `/v1/chat/completions`. Implementat în `demo/run_demo.py` via `_OLLAMA_DIRECT_MAP`.
 
 **Ollama nu răspunde:**
 ```bash

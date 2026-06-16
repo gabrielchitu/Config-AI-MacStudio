@@ -37,3 +37,5 @@ Ollama pornește automat la login (Homebrew LaunchAgent).
 - [`docs/setup-ai-stack.md`](docs/setup-ai-stack.md) — arhitectură completă stack
 - [`docs/zshrc.md`](docs/zshrc.md) — toate alias-urile și configurația shell
 - [`docs/litellm-config.md`](docs/litellm-config.md) — LiteLLM config, Ollama autostart, troubleshooting
+- [`docs/architecture.md`](docs/architecture.md) — protocol flow, gotchas, benchmark rezultate
+- [`docs/demo-roadmap.md`](docs/demo-roadmap.md) — demo group matching local LLM (Varianta A + B)
