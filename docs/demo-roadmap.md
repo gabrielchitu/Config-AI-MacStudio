@@ -34,9 +34,10 @@ python3 run_demo.py
 
 | Model | Score | Timp/call | Note |
 |---|---|---|---|
+| qwen2.5-coder:14b | 3/3 ✅ | 10.6s | via LiteLLM |
 | mistral-small3.2:24b | 3/3 ✅ | 24.0s | via LiteLLM |
-| deepseek-r1:32b | 3/3 ✅ | 62.4s | via LiteLLM |
 | glm-4.7-flash | 3/3 ✅ | 40.4s | Ollama direct (bypass LiteLLM — template non-chat) |
+| deepseek-r1:32b | 3/3 ✅ | 62.4s | via LiteLLM |
 
 > **GLM gotcha:** `glm-4.7-flash:latest` are template `{{ .Prompt }}` (non-chat). LiteLLM streaming parse eșuează silențios → content gol. Fix: bypass LiteLLM, POST direct la Ollama `/api/generate`. Implementat în `run_demo.py` via `_OLLAMA_DIRECT_MAP`.
 
@@ -71,12 +72,14 @@ MODEL=deepseek-local OFERTA_NR=2 python3 run_pipeline.py
 
 ### Benchmark Varianta B (189 grupuri DT2, oferta_1)
 
-| Model | Grupuri matched | Articole matched | NC total | Timp total |
-|---|---|---|---|---|
-| mistral-small3.2:24b | 189/189 ✅ | 1548 | 788 | 17.8s |
-| claude-sonnet-4-6 (baseline) | 189/189 ✅ | 1547 | 788 | ~120s |
+| Model | Grupuri matched | Articole matched | Timp total |
+|---|---|---|---|
+| mistral-small3.2:24b | 189/189 ✅ | 1548 | 27.1s |
+| qwen2.5-coder:14b | 189/189 ✅ | 1548 | 42.0s |
+| deepseek-r1:32b | 189/189 ✅ | 1548 | 98.1s |
+| claude-sonnet-4-6 (baseline) | 189/189 ✅ | 1547 | ~120s |
 
-mistral-small local ≈ identic cu claude-sonnet: aceleași grupuri, același număr NC, +1 articol matched. Cost: 0 credite. Viteză: 6.7× mai rapid.
+Toți 3 locali identici ca rezultate. Față de claude-sonnet: +1 articol matched, cost 0, viteză 1.2–4.4× mai rapid.
 
 ### Baseline de comparat
 

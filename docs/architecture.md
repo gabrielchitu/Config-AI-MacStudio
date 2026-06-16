@@ -124,16 +124,18 @@ Codul `run_demo.py` nu se schimbă.
 
 | Model | Score | Timp/call | Date |
 |---|---|---|---|
+| qwen2.5-coder:14b | 3/3 ✅ | 10.6s | 2026-06-16 |
 | mistral-small3.2:24b | 3/3 ✅ | 24.0s | 2026-06-16 |
-| deepseek-r1:32b | 3/3 ✅ | 62.4s | 2026-06-16 |
 | glm-4.7-flash | 3/3 ✅ | 40.4s | 2026-06-16 |
+| deepseek-r1:32b | 3/3 ✅ | 62.4s | 2026-06-16 |
 
 ### Varianta B — pipeline complet DT2 (189 grupuri, oferta_1)
 
-| Model | Grupuri matched | Articole matched | NC total | Timp total | Date |
-|---|---|---|---|---|---|
-| mistral-small3.2:24b | 189/189 ✅ | 1548 | 788 | 17.8s | 2026-06-16 |
-| claude-sonnet-4-6 (baseline) | 189/189 ✅ | 1547 | 788 | ~120s | 2026-06-11 |
+| Model | Grupuri matched | Articole matched | Timp total | Date |
+|---|---|---|---|---|
+| mistral-small3.2:24b | 189/189 ✅ | 1548 | 27.1s | 2026-06-16 |
+| qwen2.5-coder:14b | 189/189 ✅ | 1548 | 42.0s | 2026-06-16 |
+| deepseek-r1:32b | 189/189 ✅ | 1548 | 98.1s | 2026-06-16 |
+| claude-sonnet-4-6 (baseline) | 189/189 ✅ | 1547 | ~120s | 2026-06-11 |
 
-mistral-small local ≈ identic cu claude-sonnet pe DT2: aceleași grupuri, același număr NC, +1 articol matched.
-Pipeline durează 17.8s (fără clasificare pagini — reutilizează checkpoints existente).
+Toți 3 locali identici ca rezultate (1548 articole, 0 grupuri ratate). Viteză: mistral > qwen > deepseek > claude-sonnet. Cost: 0 credite.
