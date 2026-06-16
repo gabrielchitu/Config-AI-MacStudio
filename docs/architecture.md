@@ -98,6 +98,7 @@ cc-mistral (zshrc alias)
 | `sk-local-...` → 401 pe instanță nouă | Virtual keys cer DB conectat | Folosește master key `gabriel2026` |
 | Port 4000 ocupat | Alt proces pe port | LiteLLM pornește pe port random; actualizează .env |
 | Model returnează markdown fences | Comportament implicit modele | Strip cu regex înainte de json.loads() |
+| `glm-4.7-flash` via LiteLLM → content gol | Template `{{ .Prompt }}` non-chat; LiteLLM streaming parse eșuează | Bypass LiteLLM → Ollama `/api/generate` direct (`_OLLAMA_DIRECT_MAP` în run_demo.py) |
 
 ---
 
@@ -107,7 +108,7 @@ Editezi `demo/.env`:
 ```env
 MODEL=mistral-small      # 15GB, 14s/call
 MODEL=deepseek-local     # 19GB, ~30-60s/call (cold start)
-MODEL=glm-local          # 19GB, ~?s
+MODEL=glm-local          # 19GB, 40s (Ollama direct, bypass LiteLLM)
 MODEL=gemini-2.5-flash   # cloud, ~2-3s
 ```
 
@@ -119,8 +120,8 @@ Codul `run_demo.py` nu se schimbă.
 
 | Model | Score | Timp/call | Date |
 |---|---|---|---|
-| mistral-small3.2:24b | 3/3 ✅ | 14.2s | 2026-06-16 |
-| deepseek-r1:32b | - | - | netestat |
-| glm-4.7-flash | - | - | netestat |
+| mistral-small3.2:24b | 3/3 ✅ | 24.0s | 2026-06-16 |
+| deepseek-r1:32b | 3/3 ✅ | 62.4s | 2026-06-16 |
+| glm-4.7-flash | 3/3 ✅ | 40.4s | 2026-06-16 |
 
 Baseline Anthropic (claude-sonnet-4-6): 189/189 grupuri DT2, ~2s/call.

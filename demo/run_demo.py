@@ -16,6 +16,7 @@ import time
 import logging
 from pathlib import Path
 
+import re
 import httpx
 from dotenv import load_dotenv
 
@@ -27,6 +28,12 @@ load_dotenv(Path(__file__).parent / ".env")
 MODEL = os.environ["MODEL"]
 BASE_URL = os.environ["ANTHROPIC_BASE_URL"]
 API_KEY = os.environ["ANTHROPIC_API_KEY"]
+OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
+
+# Modele care necesită bypass LiteLLM → Ollama direct (template {{ .Prompt }}, non-chat)
+_OLLAMA_DIRECT_MAP = {
+    "glm-local": "glm-4.7-flash:latest",
+}
 
 DATA_DIR = Path(__file__).parent / "test_data"
 
@@ -54,7 +61,9 @@ def load_headers(path: Path) -> dict:
 
 
 def llm_call(model: str, system: str, user: str) -> str:
-    """Apel direct la LiteLLM via OpenAI-compatible endpoint (/v1/chat/completions)."""
+    """Apel LLM. GLM→Ollama direct (non-chat template). Restul→LiteLLM /v1/chat/completions."""
+    if model in _OLLAMA_DIRECT_MAP:
+        return _llm_call_ollama_direct(model, system, user)
     payload = {
         "model": model,
         "temperature": 0.0,
@@ -74,6 +83,19 @@ def llm_call(model: str, system: str, user: str) -> str:
     return r.json()["choices"][0]["message"]["content"]
 
 
+def _llm_call_ollama_direct(model: str, system: str, user: str) -> str:
+    """Bypass LiteLLM — cheamă Ollama /api/generate direct (pentru modele non-chat template)."""
+    ollama_model = _OLLAMA_DIRECT_MAP[model]
+    prompt = f"{system}\nReturn ONLY valid JSON. No markdown, no explanation.\n\nUSER:\n{user}"
+    r = httpx.post(
+        f"{OLLAMA_HOST}/api/generate",
+        json={"model": ollama_model, "prompt": prompt, "stream": False, "options": {"temperature": 0}},
+        timeout=180.0,
+    )
+    r.raise_for_status()
+    return r.json()["response"]
+
+
 def run_match(ref_headers: dict, oferta_headers: dict) -> list:
     ref_den_to_key = {_den_string(v): k for k, v in ref_headers.items() if _den_string(v)}
     oferta_den_to_key = {_den_string(v): k for k, v in oferta_headers.items() if _den_string(v)}
@@ -86,7 +108,8 @@ def run_match(ref_headers: dict, oferta_headers: dict) -> list:
         f"OFERTĂ (grupuri nematched):\n{oferta_list}"
     )
 
-    logger.info(f"Calling LLM: {MODEL} @ {BASE_URL}/v1/chat/completions")
+    endpoint = f"{OLLAMA_HOST}/api/generate" if MODEL in _OLLAMA_DIRECT_MAP else f"{BASE_URL}/v1/chat/completions"
+    logger.info(f"Calling LLM: {MODEL} @ {endpoint}")
     t0 = time.time()
 
     raw = llm_call(MODEL, _LLM_GROUP_SYSTEM_PROMPT, user_prompt)
@@ -95,7 +118,6 @@ def run_match(ref_headers: dict, oferta_headers: dict) -> list:
     logger.info(f"Raw response: {raw!r}")
 
     # strip markdown fences dacă modelul le adaugă
-    import re
     if raw:
         m = re.search(r'```(?:json)?\s*([\s\S]+?)\s*(?:```|$)', raw)
         if m:
