@@ -77,12 +77,22 @@ Total pe disc: ~62 GB
 - Auto-rewrite comenzi Bash prin hook Claude Code
 - Wrappers în zshrc: `python3`, `python` → `rtk proxy`, `jq` → `rtk jq`
 
-## Cum pornești LiteLLM
+## LiteLLM — Autostart (LaunchDaemon)
 
+LiteLLM pornește automat la boot via LaunchDaemon (ca `root`):
+
+- Fișier: `/Library/LaunchDaemons/com.gabrielchitu.litellm.plist`
+- Port: **4000** (stabil — KeepAlive: true)
+- Auth key: `sk-local-7279bbc34c1ec9e2b37e1e15e941f820` (virtual key, DB mode)
+- Log: `~/litellm.log` și `~/litellm.error.log` (owned root)
+
+**Restart după modificare config.yaml:**
 ```bash
-source ~/venv-litellm/bin/activate
-litellm --config ~/config.yaml
+sudo launchctl unload /Library/LaunchDaemons/com.gabrielchitu.litellm.plist
+sudo launchctl load /Library/LaunchDaemons/com.gabrielchitu.litellm.plist
 ```
+
+> NU porni LiteLLM manual — daemonul ocupă portul 4000, instanța manuală alege port random.
 
 ## Cum folosești un model local
 
@@ -90,9 +100,28 @@ litellm --config ~/config.yaml
 cc-mistral          # deschide Claude Code cu mistral-small3.2:24b
 cc-deepseek         # deepseek-r1:32b
 cc-glm-local        # glm-4.7-flash
+cc-qwen             # qwen2.5-coder:14b
 ```
 
 Sau direct cu model arbitrar prin LiteLLM:
 ```bash
 ccl --model mistral-small
+```
+
+## Integrare analiza-oferte-local
+
+Pipeline-ul real suportă local LLM via `.env`:
+
+```env
+ANTHROPIC_BASE_URL=http://localhost:4000
+ANTHROPIC_API_KEY=sk-local-7279bbc34c1ec9e2b37e1e15e941f820
+ANTHROPIC_MODEL=mistral-small   # sau qwen-coder / deepseek-local
+```
+
+Switch înapoi la Anthropic: comentezi `ANTHROPIC_BASE_URL` + pui `ANTHROPIC_API_KEY=sk-ant-...`.
+
+Rulare pipeline cu local LLM:
+```bash
+cd ~/analiza-oferte-local
+python3 multi_client_run.py --client DT2
 ```
