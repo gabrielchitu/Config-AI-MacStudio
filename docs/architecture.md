@@ -118,10 +118,20 @@ Codul `run_demo.py` nu se schimbă.
 
 ## Benchmark rezultate
 
+### Varianta A — group matching minimal (3 grupuri DT2)
+
 | Model | Score | Timp/call | Date |
 |---|---|---|---|
 | mistral-small3.2:24b | 3/3 ✅ | 24.0s | 2026-06-16 |
 | deepseek-r1:32b | 3/3 ✅ | 62.4s | 2026-06-16 |
 | glm-4.7-flash | 3/3 ✅ | 40.4s | 2026-06-16 |
 
-Baseline Anthropic (claude-sonnet-4-6): 189/189 grupuri DT2, ~2s/call.
+### Varianta B — pipeline complet DT2 (189 grupuri, oferta_1)
+
+| Model | Grupuri matched | Articole matched | NC total | Timp total | Date |
+|---|---|---|---|---|---|
+| mistral-small3.2:24b | 189/189 ✅ | 1548 | 788 | 17.8s | 2026-06-16 |
+| claude-sonnet-4-6 (baseline) | 189/189 ✅ | 1547 | 788 | ~120s | 2026-06-11 |
+
+mistral-small local ≈ identic cu claude-sonnet pe DT2: aceleași grupuri, același număr NC, +1 articol matched.
+Pipeline durează 17.8s (fără clasificare pagini — reutilizează checkpoints existente).
