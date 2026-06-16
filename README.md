@@ -19,6 +19,7 @@ Configurații și documentație pentru stack-ul AI local pe MacStudio.
 | `cc-mistral` | mistral-small3.2:24b (15 GB) | Ollama local |
 | `cc-deepseek` | deepseek-r1:32b (19 GB) | Ollama local |
 | `cc-glm-local` | glm-4.7-flash (19 GB) | Ollama local |
+| `cc-qwen` | qwen2.5-coder:14b (9 GB) | Ollama local |
 | `cc-gemini` | gemini-2.5-flash | Google API |
 | `cc-glm-coding` | glm-4.7 | Z.ai coding |
 | `cc-glm-credits` | glm-4.7 | Z.ai credits |

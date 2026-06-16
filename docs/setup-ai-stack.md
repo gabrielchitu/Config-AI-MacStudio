@@ -33,6 +33,7 @@ Claude Code CLI
 | `mistral-small` | `ollama/mistral-small3.2:24b` | local |
 | `deepseek-local` | `ollama/deepseek-r1:32b` | local |
 | `glm-local` | `ollama/glm-4.7-flash:latest` | local |
+| `qwen-coder` | `ollama/qwen2.5-coder:14b` | local |
 | `gemini-2.5-flash` | Google Generative Language API | cloud |
 | `glm-coding` | Z.ai `/api/coding/paas/v4` | cloud |
 | `glm-credits` | Z.ai `/api/paas/v4` | cloud |
@@ -49,8 +50,9 @@ Claude Code CLI
 | deepseek-r1 | 19 GB | `32b` |
 | glm-4.7-flash | 19 GB | `latest` |
 | glm-4.7 | — | `cloud` (fără weights) |
+| qwen2.5-coder | 9 GB | `14b` |
 
-Total pe disc: ~53 GB
+Total pe disc: ~62 GB
 
 ## Claude Code aliases (zshrc)
 
@@ -63,6 +65,7 @@ Total pe disc: ~53 GB
 | `cc-mistral` | mistral-small | LiteLLM → Ollama |
 | `cc-deepseek` | deepseek-local | LiteLLM → Ollama |
 | `cc-glm-local` | glm-local | LiteLLM → Ollama |
+| `cc-qwen` | qwen-coder | LiteLLM → Ollama |
 | `cc-gemini` | gemini-2.5-flash | LiteLLM → Google |
 | `cc-glm-coding` | glm-coding | LiteLLM → Z.ai |
 | `cc-glm-credits` | glm-credits | LiteLLM → Z.ai |

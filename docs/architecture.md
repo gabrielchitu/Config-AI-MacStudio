@@ -33,7 +33,8 @@ Stack-ul permite rularea oricărui LLM local (Ollama) sau cloud (Gemini, Z.ai) c
 │  Model routing:                                         │
 │  "mistral-small"    → ollama/mistral-small3.2:24b      │
 │  "deepseek-local"   → ollama/deepseek-r1:32b           │
-│  "glm-local"        → ollama/glm-4.7-flash:latest      │
+│  "glm-local"        → ollama/glm-4.7-flash:latest
+  "qwen-coder"       → ollama/qwen2.5-coder:14b      │
 │  "gemini-2.5-flash" → Google Generative Language API   │
 │  "glm-coding"       → Z.ai /api/coding/paas/v4         │
 │  "glm-credits"      → Z.ai /api/paas/v4                │
@@ -49,6 +50,7 @@ Stack-ul permite rularea oricărui LLM local (Ollama) sau cloud (Gemini, Z.ai) c
 │  mistral-small3.2:24b  15GB  │
 │  deepseek-r1:32b       19GB  │
 │  glm-4.7-flash:latest  19GB  │
+│  qwen2.5-coder:14b      9GB  │
 └──────────────────────────────┘
 ```
 

@@ -45,6 +45,7 @@ router_settings:
 | `mistral-small` | `mistral-small3.2:24b` | 15 GB |
 | `deepseek-local` | `deepseek-r1:32b` | 19 GB |
 | `glm-local` | `glm-4.7-flash:latest` | 19 GB |
+| `qwen-coder` | `qwen2.5-coder:14b` | 9 GB |
 
 > **Fix aplicat 2026-06-16:** `custom_llm_provider: anthropic` eliminat din modelele Ollama.
 > Cu el, LiteLLM încerca să cheme Anthropic API real (necesita ANTHROPIC_API_KEY real) în loc de Ollama.
