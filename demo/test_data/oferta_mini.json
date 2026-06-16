@@ -1,0 +1,28 @@
+{
+  "deviz_headers": {
+    "76efa4e6c305adcd": {
+      "obiectivul": "0232 000000232 DRUMURI TATARANI",
+      "obiectul": "0001 1 Strada Zoica",
+      "categoria": "ZO0003 BCR4.5 - 18 cm 6.90 smp",
+      "is_valid": true,
+      "deviz_cod": "ZO0003",
+      "deviz_key": "76efa4e6c305adcd"
+    },
+    "c5796f53deaacc30": {
+      "obiectivul": "0232 000000232 DRUMURI TATARANI",
+      "obiectul": "0001 1 Strada Zoica",
+      "categoria": "ZO0001 Terasamente 7.70 smp",
+      "is_valid": true,
+      "deviz_cod": "ZO0001",
+      "deviz_key": "c5796f53deaacc30"
+    },
+    "30f0a600168fb006": {
+      "obiectivul": "0232 000000232 DRUMURI TATARANI",
+      "obiectul": "0001 1 Strada Zoica",
+      "categoria": "ZO0002 Balast 770 mc",
+      "is_valid": true,
+      "deviz_cod": "ZO0002",
+      "deviz_key": "30f0a600168fb006"
+    }
+  }
+}
