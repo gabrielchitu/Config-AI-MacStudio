@@ -46,7 +46,9 @@ router_settings:
 | `deepseek-local` | `deepseek-r1:32b` | 19 GB |
 | `glm-local` | `glm-4.7-flash:latest` | 19 GB |
 
-Toți cu `custom_llm_provider: anthropic` — LiteLLM traduce protocolul Ollama → Anthropic.
+> **Fix aplicat 2026-06-16:** `custom_llm_provider: anthropic` eliminat din modelele Ollama.
+> Cu el, LiteLLM încerca să cheme Anthropic API real (necesita ANTHROPIC_API_KEY real) în loc de Ollama.
+> Prefixul `ollama/` din model name este suficient pentru routing corect.
 
 ### Cloud — Gemini
 

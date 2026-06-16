@@ -16,10 +16,8 @@ import time
 import logging
 from pathlib import Path
 
+import httpx
 from dotenv import load_dotenv
-import anthropic
-
-from anthropic_adapter import AnthropicAdapter
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 logger = logging.getLogger(__name__)
@@ -55,7 +53,28 @@ def load_headers(path: Path) -> dict:
         return json.load(f)["deviz_headers"]
 
 
-def run_match(ref_headers: dict, oferta_headers: dict, llm_client, model: str) -> list:
+def llm_call(model: str, system: str, user: str) -> str:
+    """Apel direct la LiteLLM via OpenAI-compatible endpoint (/v1/chat/completions)."""
+    payload = {
+        "model": model,
+        "temperature": 0.0,
+        "messages": [
+            {"role": "system", "content": system + "\nReturn ONLY valid JSON. No markdown, no explanation."},
+            {"role": "user", "content": user},
+        ],
+        "max_tokens": 1000,
+    }
+    r = httpx.post(
+        f"{BASE_URL}/v1/chat/completions",
+        headers={"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"},
+        json=payload,
+        timeout=120.0,
+    )
+    r.raise_for_status()
+    return r.json()["choices"][0]["message"]["content"]
+
+
+def run_match(ref_headers: dict, oferta_headers: dict) -> list:
     ref_den_to_key = {_den_string(v): k for k, v in ref_headers.items() if _den_string(v)}
     oferta_den_to_key = {_den_string(v): k for k, v in oferta_headers.items() if _den_string(v)}
 
@@ -67,22 +86,21 @@ def run_match(ref_headers: dict, oferta_headers: dict, llm_client, model: str) -
         f"OFERTĂ (grupuri nematched):\n{oferta_list}"
     )
 
-    logger.info(f"Calling LLM: {model} @ {BASE_URL}")
+    logger.info(f"Calling LLM: {MODEL} @ {BASE_URL}/v1/chat/completions")
     t0 = time.time()
 
-    resp = llm_client.chat.completions.create(
-        model=model,
-        temperature=0.0,
-        response_format={"type": "json_object"},
-        messages=[
-            {"role": "system", "content": _LLM_GROUP_SYSTEM_PROMPT},
-            {"role": "user", "content": user_prompt},
-        ],
-        max_tokens=1000,
-    )
-
+    raw = llm_call(MODEL, _LLM_GROUP_SYSTEM_PROMPT, user_prompt)
     elapsed = time.time() - t0
-    raw = resp.choices[0].message.content
+
+    logger.info(f"Raw response: {raw!r}")
+
+    # strip markdown fences dacă modelul le adaugă
+    import re
+    if raw:
+        m = re.search(r'```(?:json)?\s*([\s\S]+?)\s*(?:```|$)', raw)
+        if m:
+            raw = m.group(1)
+
     parsed = json.loads(raw) if raw else {}
     matches = parsed.get("matches", [])
 
@@ -119,12 +137,9 @@ def main():
     for k, v in oferta_headers.items():
         print(f"  [{k[:8]}] {_den_string(v)}")
 
-    raw_client = anthropic.Anthropic(base_url=BASE_URL, api_key=API_KEY)
-    llm_client = AnthropicAdapter(raw_client, model=MODEL)
-
     print(f"\nRulez matching LLM...")
     try:
-        matches, elapsed = run_match(ref_headers, oferta_headers, llm_client, MODEL)
+        matches, elapsed = run_match(ref_headers, oferta_headers)
     except Exception as e:
         print(f"\nERROR: {e}")
         raise

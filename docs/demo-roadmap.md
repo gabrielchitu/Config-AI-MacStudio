@@ -4,7 +4,7 @@
 
 **Scop:** Validare că un LLM local poate face matching semantic între grupuri de devize cu formate diferite.
 
-**Status:** ✅ Implementat
+**Status:** ✅ Funcțional — testat 2026-06-16, mistral-small3.2:24b, 3/3 grupuri matched corect, 14.2s/call
 
 **Locație:** `demo/`
 
